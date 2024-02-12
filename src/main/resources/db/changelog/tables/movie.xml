@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="Filip" id="movie_00_00">
+        
+        <createTable tableName="movie_type">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="movie_type_pkey"/>
+            </column>
+            
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+
+        <createTable tableName="movie">
+
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="movie_pkey"/>
+            </column>
+
+            <column name="name" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="type" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+        
+        
+        <addForeignKeyConstraint baseTableName="movie" baseColumnNames="type" constraintName="movie_ref_movie_type_fkey" referencedTableName="movie_type"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+
+
+    <changeSet author="Filip" id="movie_00_01">
+        <addUniqueConstraint
+                tableName="movie_type"
+                constraintName="unique_movie_type_name"
+                columnNames="type" />
+    </changeSet>
+
+
+    <changeSet author="Filip" id="movie_00_02">
+        <addColumn
+                tableName="movie_type">
+            <column name="price" type="INT"/>
+        </addColumn>
+    </changeSet>
+
+
+
+</databaseChangeLog>
