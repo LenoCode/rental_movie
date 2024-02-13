@@ -7,6 +7,7 @@ import org.test.casumo.modules.rent.domain.dao.CustomerDao;
 import org.test.casumo.modules.rent.domain.dao.MovieDao;
 import org.test.casumo.modules.rent.domain.dao.RentsDao;
 import org.test.casumo.modules.rent.domain.dto.response.RentDetailsDto;
+import org.test.casumo.modules.rent.domain.dto.response.ReturnDetailsDto;
 import org.test.casumo.modules.rent.domain.mapper.RentMapper;
 import org.test.casumo.modules.rent.domain.mapper.RentMapperImpl;
 import org.test.casumo.modules.rent.domain.repository.CustomerRepository;
@@ -18,6 +19,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -70,9 +72,41 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
+    public ReturnDetailsDto returnMovies(List<Long> movies) {
+        int[] surcharges = {0};
+
+        movies.forEach(movieId ->{
+            Optional<MovieDao> movie = movieRepository.findById(movieId);
+            if(movie.isEmpty())
+                throw new EntityNotFoundException("No movie with id"+movieId);
+
+            if(rentsRepository.checkIfMovieIsRented(movieId).isPresent()){
+                Optional<RentsDao> rentsDao = rentsRepository.getRentByMovieId(movieId);
+                if(rentsDao.isEmpty())
+                    throw new EntityNotFoundException("No rent with movie id"+movieId);
+                else{
+                    RentsDao rent = rentsDao.get();
+                    surcharges[0] += (int) (RentService.checkHowManyDaysLate(rent.getReturnDate()) * rentsDao.get().getMovieDao().getMovieTypeDao().getPrice());
+
+                    rent.setActive(false);
+                    rentsRepository.save(rent);
+                }
+            }
+        });
+        int finalDepth = surcharges[0];
+        return new ReturnDetailsDto(finalDepth);
+    }
+
+    @Override
     public boolean isMoveAvailable(long movieId) {
         return rentsRepository.checkIfMovieIsRented(movieId).isEmpty();
     }
+
+
+
+
+
+
 
 
 

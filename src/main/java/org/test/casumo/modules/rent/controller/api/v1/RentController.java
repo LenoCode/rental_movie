@@ -3,12 +3,11 @@ package org.test.casumo.modules.rent.controller.api.v1;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.test.casumo.modules.rent.domain.dto.request.RentMoviesDto;
+import org.test.casumo.modules.rent.domain.dto.request.ReturnMoviesDto;
 import org.test.casumo.modules.rent.domain.dto.response.RentDetailsDto;
+import org.test.casumo.modules.rent.domain.dto.response.ReturnDetailsDto;
 import org.test.casumo.modules.rent.service.domain.RentService;
 
 import java.util.ArrayList;
@@ -39,5 +38,11 @@ public class RentController {
         }catch (Exception e){
             return ResponseEntity.badRequest().build();
         }
+    }
+
+
+    @PostMapping("/return")
+    public ResponseEntity<ReturnDetailsDto> returnMovie(@RequestBody ReturnMoviesDto returnMoviesDto){
+        return ResponseEntity.ok(rentService.returnMovies(returnMoviesDto.getMovies()));
     }
 }

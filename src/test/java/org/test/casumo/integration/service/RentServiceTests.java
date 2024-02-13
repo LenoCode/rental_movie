@@ -13,6 +13,7 @@ import org.test.casumo.modules.rent.domain.dao.MovieDao;
 import org.test.casumo.modules.rent.domain.dao.MovieTypeDao;
 import org.test.casumo.modules.rent.domain.dao.RentsDao;
 import org.test.casumo.modules.rent.domain.dto.response.RentDetailsDto;
+import org.test.casumo.modules.rent.domain.dto.response.ReturnDetailsDto;
 import org.test.casumo.modules.rent.domain.repository.CustomerRepository;
 import org.test.casumo.modules.rent.domain.repository.MovieRepository;
 import org.test.casumo.modules.rent.domain.repository.MovieTypeRepository;
@@ -20,6 +21,7 @@ import org.test.casumo.modules.rent.service.domain.RentService;
 import org.test.casumo.modules.rent.service.domain.impl.RentServiceImpl;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -57,4 +59,6 @@ public class RentServiceTests {
         Assertions.assertFalse(rentService.isMoveAvailable(movieDao.getId()));
         Assertions.assertEquals(movieTypeDao.get().getPrice() * 5, rentDetailsDto.getPrice());
     }
+
+
 }

@@ -24,4 +24,8 @@ public interface RentsRepository extends PagingAndSortingRepository<RentsDao,Lon
 
     @Query(value="select m from MovieDao m inner join RentsDao r on r.movieDao.id = m.id where r.active=true and m.id=?1")
     Optional<MovieDao> checkIfMovieIsRented(long movieId);
+
+
+    @Query(value="select r from MovieDao  m inner join RentsDao r on r.movieDao.id = m.id where r.active=true and m.id=?1")
+    Optional<RentsDao> getRentByMovieId(long movieId);
 }
